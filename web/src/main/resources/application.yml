@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: messenger
+  thymeleaf:
+    # Whether to check that the template exists before rendering it.
+    check-template: true
+    # Whether to check that the templates location exists.
+    check-template-location: true
+    enabled: true
+    encoding: UTF-8
+    mode: HTML
+  datasource:
+    url: jdbc:postgresql://localhost:5432/im-db-training-project
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+    testWhileIdle: true
+    validationQuery: SELECT 1
+    hikari:
+      connectionTimeout: 30000
+      idleTimeout: 600000
+      maxLifetime: 1800000
+      maximumPoolSize: 20
+#    uncomment to init and populate the database
+#    schema: classpath:db/schema.sql
+#    data: classpath:db/data.sql
+#    initialization-mode: always
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            #noncontextual lob creation switch-on
+            #https://github.com/spring-projects/spring-boot/issues/12007#issuecomment-369388646
+            non_contextual_creation: true
+        format_sql: true
+        ddl-auto: validate
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+server:
+  port: 8080
+  servlet:
+    context-path: /
