@@ -1,6 +1,6 @@
 package com.basumatarau.imProject.persistenceTest;
 
-import com.basumatarau.imProject.persistence.model.User;
+import com.basumatarau.imProject.persistence.model.user.User;
 import com.basumatarau.imProject.persistence.repository.UserRepository;
 import com.basumatarau.imProject.persistence.repository.util.UserSpecifications;
 import org.junit.Test;

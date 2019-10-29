@@ -2,11 +2,20 @@ DROP SCHEMA if exists instant_messenger_db_schema CASCADE;
 
 CREATE SCHEMA if not exists instant_messenger_db_schema AUTHORIZATION postgres;
 
-COMMENT ON SCHEMA instant_messenger_db_schema IS 'instant messenger web application - vironit training project ';
+COMMENT ON SCHEMA instant_messenger_db_schema IS 'instant messenger web application - training project ';
 
--- DROP SEQUENCE instant_messenger_db_schema.users_id_seq;
+-- Drop table
 
-CREATE SEQUENCE if not exists instant_messenger_db_schema.users_id_seq
+-- DROP TABLE social_app_db_schema.external_ids;
+
+create table instant_messenger_db_schema.external_ids (
+	uuid uuid not null,
+	CONSTRAINT external_ids_pk PRIMARY KEY (uuid)
+);
+
+-- DROP SEQUENCE instant_messenger_db_schema.identity_id_seq;
+
+CREATE SEQUENCE if not exists instant_messenger_db_schema.identity_id_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 9223372036854775807
@@ -19,17 +28,33 @@ CREATE SEQUENCE if not exists instant_messenger_db_schema.users_id_seq
 -- DROP TABLE instant_messenger_db_schema.users;
 
 CREATE TABLE if not exists instant_messenger_db_schema.users (
-	id bigint NOT NULL DEFAULT nextval('instant_messenger_db_schema.users_id_seq'),
+	id bigint NOT NULL DEFAULT nextval('instant_messenger_db_schema.identity_id_seq'),
+	uuid uuid not null,
+    "type" varchar(12) not null,
+
 	"role" varchar(8) NOT NULL DEFAULT 'USER',
-	firstname varchar(150) NULL,
-	lastname varchar(150) NULL,
-	nickname varchar(60) NOT NULL,
+
+	first_name varchar(150) NULL,
+	last_name varchar(150) NULL,
+	nick_name varchar(60) NOT NULL,
+
 	email varchar(160) NOT NULL,
-	passwordhash varchar(160) NOT NULL,
+	password_hash varchar(160) NOT NULL,
+
 	enabled bool NOT NULL,
+    account_non_locked bool not null,
+	account_non_expired bool not null,
+	credentials_non_expired bool not null,
+	account_confirmed bool not null,
+
+    auth_provider varchar(80) not null,
+	provided_id varchar(120) null,
+	image_url varchar(160) null,
+
 	CONSTRAINT users_pk PRIMARY KEY (id)
 );
 CREATE UNIQUE INDEX if not exists users_email_idx ON instant_messenger_db_schema.users USING btree (email);
+alter table instant_messenger_db_schema.users ADD CONSTRAINT users_fk FOREIGN KEY (uuid) references instant_messenger_db_schema.external_ids(uuid) ON UPDATE cascade ON DELETE cascade;
 --ALTER SEQUENCE instant_messenger_db_schema.user_id_seq OWNED BY users.id;
 
 

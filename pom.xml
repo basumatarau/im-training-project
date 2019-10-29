@@ -27,6 +27,7 @@
         <spring.boot.version>2.1.6.RELEASE</spring.boot.version>
         <org.modelmapper.modelmapper>2.3.5</org.modelmapper.modelmapper>
         <org.slf4j.slf4j-api>1.7.28</org.slf4j.slf4j-api>
+        <javac.compiler.version>3.8.1</javac.compiler.version>
     </properties>
 
     <dependencyManagement>
@@ -59,7 +60,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>${javac.compiler.version}</version>
                 <configuration>
                     <source>9</source>
                     <target>9</target>

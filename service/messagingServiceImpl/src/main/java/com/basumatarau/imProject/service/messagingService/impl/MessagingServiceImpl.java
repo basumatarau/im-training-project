@@ -1,5 +1,6 @@
 package com.basumatarau.imProject.service.messagingService.impl;
 
+import com.basumatarau.imProject.persistence.model.user.User;
 import com.basumatarau.imProject.service.messagingService.MessagingService;
 import com.basumatarau.imProject.persistence.model.*;
 import com.basumatarau.imProject.persistence.repository.*;

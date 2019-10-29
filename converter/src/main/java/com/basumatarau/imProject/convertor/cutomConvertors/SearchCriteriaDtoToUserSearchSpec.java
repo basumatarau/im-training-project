@@ -1,6 +1,6 @@
 package com.basumatarau.imProject.convertor.cutomConvertors;
 
-import com.basumatarau.imProject.persistence.model.User;
+import com.basumatarau.imProject.persistence.model.user.User;
 import com.basumatarau.imProject.persistence.repository.util.UserSpecifications;
 import com.basumatarau.imProject.serializer.customDto.SearchCriteriaDto;
 import org.modelmapper.Converter;

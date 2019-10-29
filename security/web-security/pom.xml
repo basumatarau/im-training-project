@@ -16,6 +16,8 @@
 
     <properties>
         <javax.servlet-api>4.0.1</javax.servlet-api>
+        <spring-security-oauth2.version>2.2.5.RELEASE</spring-security-oauth2.version>
+        <spring-security-oauth2-autoconfigure.version>2.1.8.RELEASE</spring-security-oauth2-autoconfigure.version>
     </properties>
 
     <dependencies>
@@ -31,6 +33,21 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+            <version>${spring-security-oauth2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security.oauth.boot</groupId>
+            <artifactId>spring-security-oauth2-autoconfigure</artifactId>
+            <version>${spring-security-oauth2-autoconfigure.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>com.basumatarau.imProject</groupId>
             <artifactId>exception</artifactId>
@@ -51,5 +68,6 @@
             <artifactId>javax.servlet-api</artifactId>
             <version>${javax.servlet-api}</version>
         </dependency>
+
     </dependencies>
 </project>

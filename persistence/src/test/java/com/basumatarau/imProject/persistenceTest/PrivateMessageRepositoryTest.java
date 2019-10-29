@@ -3,7 +3,7 @@ package com.basumatarau.imProject.persistenceTest;
 import com.basumatarau.imProject.persistence.model.Message;
 import com.basumatarau.imProject.persistence.model.PersonalContact;
 import com.basumatarau.imProject.persistence.model.PrivateMessage;
-import com.basumatarau.imProject.persistence.model.User;
+import com.basumatarau.imProject.persistence.model.user.User;
 import com.basumatarau.imProject.persistence.repository.ContactEntryRepository;
 import com.basumatarau.imProject.persistence.repository.PrivateMessageRepository;
 import org.junit.Before;

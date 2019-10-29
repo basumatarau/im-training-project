@@ -2,7 +2,7 @@ package com.basumatarau.imProject.persistenceTest;
 
 import com.basumatarau.imProject.persistence.model.ContactEntry;
 import com.basumatarau.imProject.persistence.model.PersonalContact;
-import com.basumatarau.imProject.persistence.model.User;
+import com.basumatarau.imProject.persistence.model.user.User;
 import com.basumatarau.imProject.persistence.repository.ContactEntryRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +30,7 @@ public class ContactEntryRepositoryTest extends BaseRepositoryTest{
         users.remove(owner);
         final Set<PersonalContact> personalContacts = new HashSet<>();
         for (User contactPerson : users) {
+
             personalContacts.add(new PersonalContact.ContactBuilder()
                     .owner(owner)
                     .person(contactPerson)

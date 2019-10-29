@@ -2,7 +2,7 @@ package com.basumatarau.imProject.persistenceTest;
 
 import com.basumatarau.imProject.persistence.model.ChatRoom;
 import com.basumatarau.imProject.persistence.model.Subscription;
-import com.basumatarau.imProject.persistence.model.User;
+import com.basumatarau.imProject.persistence.model.user.User;
 import com.basumatarau.imProject.persistence.repository.ChatRoomRepository;
 import com.basumatarau.imProject.persistence.repository.ContactEntryRepository;
 import com.basumatarau.imProject.persistence.repository.UserRepository;

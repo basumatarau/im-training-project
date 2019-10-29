@@ -1,7 +1,6 @@
 package com.basumatarau.imProject.security.webSecurity.oauth2;
 
 import com.basumatarau.imProject.security.webSecurity.util.CookieUtils;
-import jdk.internal.joptsimple.internal.Strings;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.stereotype.Component;
@@ -34,7 +33,7 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
         String state = authorizationRequest.getState();
 
         String redirectUriAfterLogin = request.getParameter(REDIRECT_URI_PARAM_COOKIE_NAME);
-        if (Strings.isNullOrEmpty(redirectUriAfterLogin)) {
+        if (!"".equals(redirectUriAfterLogin)) {
             CookieUtils.addCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME, redirectUriAfterLogin, cookieExpireSeconds);
         }
     }

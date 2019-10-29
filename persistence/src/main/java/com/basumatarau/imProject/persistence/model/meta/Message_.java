@@ -2,7 +2,7 @@ package com.basumatarau.imProject.persistence.model.meta;
 
 import com.basumatarau.imProject.persistence.model.Message;
 import com.basumatarau.imProject.persistence.model.MessageResource;
-import com.basumatarau.imProject.persistence.model.User;
+import com.basumatarau.imProject.persistence.model.user.User;
 
 import javax.annotation.Generated;
 import javax.persistence.metamodel.SingularAttribute;

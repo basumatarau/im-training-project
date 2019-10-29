@@ -1,5 +1,7 @@
 package com.basumatarau.imProject.persistence.model;
 
+import com.basumatarau.imProject.persistence.model.user.User;
+
 import javax.persistence.*;
 import java.util.Objects;
 

@@ -1,7 +1,8 @@
 package com.basumatarau.imProject.persistenceTest;
 
 import com.basumatarau.imProject.persistence.model.ChatRoom;
-import com.basumatarau.imProject.persistence.model.User;
+import com.basumatarau.imProject.persistence.model.user.AuthenticationDetails;
+import com.basumatarau.imProject.persistence.model.user.User;
 import com.basumatarau.imProject.persistence.repository.ChatRoomRepository;
 import com.basumatarau.imProject.persistence.repository.UserRepository;
 import com.basumatarau.imProject.persistenceTest.config.H2TestProfileJPAConfiguration;
@@ -16,6 +17,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.basumatarau.imProject.persistence.model.user.AuthenticationDetails.AuthenticationProvider.local;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("dao-test")
@@ -33,27 +36,36 @@ public abstract class BaseRepositoryTest {
     @Before
     public void initBase() throws InstantiationException {
 
-        users.add(new User.UserBuilder()
+        AuthenticationDetails localDetails
+                = AuthenticationDetails.builder().authProvider(local).build();
+
+        users.add(new User().userBuilder()
+                .isEnabled(true)
+                .details(localDetails)
                 .role(User.UserRole.USER)
-                .enabled(true)
+                .isEnabled(true)
                 .firstName("TestFirstName1")
                 .lastName("TestLastName1")
                 .nickName("TestNickName1")
                 .email("test@email.com1")
                 .passwordHash("testStub1")
                 .build());
-        users.add(new User.UserBuilder()
+        users.add(User.userBuilder()
+                .isEnabled(true)
+                .details(localDetails)
                 .role(User.UserRole.USER)
-                .enabled(true)
+                .isEnabled(true)
                 .firstName("TestFirstName2")
                 .lastName("TestLastName2")
                 .nickName("TestNickName2")
                 .email("test@email.com2")
                 .passwordHash("testStub2")
                 .build());
-        users.add(new User.UserBuilder()
+        users.add(User.userBuilder()
+                .isEnabled(true)
+                .details(localDetails)
                 .role(User.UserRole.USER)
-                .enabled(true)
+                .isEnabled(true)
                 .firstName("TestFirstName3")
                 .lastName("TestLastName3")
                 .nickName("TestNickName3")

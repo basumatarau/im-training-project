@@ -1,6 +1,7 @@
 package com.basumatarau.imProject.service.userServiceImpl.impl;
 
 import com.basumatarau.imProject.persistence.model.*;
+import com.basumatarau.imProject.persistence.model.user.User;
 import com.basumatarau.imProject.persistence.repository.ChatRoomRepository;
 import com.basumatarau.imProject.persistence.repository.ContactEntryRepository;
 import com.basumatarau.imProject.persistence.repository.UserRepository;
@@ -11,8 +12,6 @@ import com.basumatarau.imProject.service.userService.UserService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

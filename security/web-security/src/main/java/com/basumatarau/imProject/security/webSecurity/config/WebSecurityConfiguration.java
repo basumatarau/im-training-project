@@ -1,7 +1,14 @@
 package com.basumatarau.imProject.security.webSecurity.config;
 
+import com.basumatarau.imProject.security.webSecurity.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.basumatarau.imProject.security.webSecurity.oauth2.user.GitHubOAuth2User;
+import com.basumatarau.imProject.security.webSecurity.oauth2.user.GoogleOAuth2User;
 import com.basumatarau.imProject.service.userDetailsServiceImpl.config.UserDetailsServiceImplConfig;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,6 +22,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.context.annotation.*;
+
+import java.util.ArrayList;
 
 @Import(value = {
         UserDetailsServiceImplConfig.class})
@@ -34,24 +43,56 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and()
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/api**").authenticated()
-                .antMatchers("/api/user/login**", "/api/user/signup**").permitAll()
+        http.cors()
                 .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager()))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager()))
+                .csrf()
+                .disable()
+                .authorizeRequests()
+                .antMatchers("/api/admin**").hasAuthority("ADMIN")
+                .antMatchers("/api**").authenticated()
+                .antMatchers("/login**", "/signup**", "/oauth2/**").permitAll()
+                .anyRequest().fullyAuthenticated()
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                .and()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .oauth2Login()
+                .authorizationEndpoint()
+                .baseUri("/oauth2/authorize")
+                .authorizationRequestRepository(cookieAuthorizationRequestRepository())
+                .and()
+                .redirectionEndpoint()
+                .baseUri("/oauth2/callback/")
+                .and()
+                .userInfoEndpoint()
+                .customUserType(GitHubOAuth2User.class, "github")
+                .customUserType(GoogleOAuth2User.class, "google")
+
+        ;
+
     }
 
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+    @Bean
+    public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository() {
+        return new HttpCookieOAuth2AuthorizationRequestRepository();
+    }
+
+    @Bean(BeanIds.AUTHENTICATION_MANAGER)
+    public AuthenticationManager globalAuthenticationManager(){
+        ArrayList<AuthenticationProvider> authenticationProviders = new ArrayList<>();
+        authenticationProviders.add(daoAuthenticationProviderBean());
+        return new ProviderManager(authenticationProviders);
+    }
+
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProviderBean(){
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setPasswordEncoder(passwordEncoder);
         authProvider.setUserDetailsService(userDetailsService);
-        auth.authenticationProvider(authProvider);
+        return authProvider;
     }
 
     @Bean

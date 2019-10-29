@@ -1,6 +1,6 @@
 package com.basumatarau.imProject.persistence.repository.util;
 
-import com.basumatarau.imProject.persistence.model.User;
+import com.basumatarau.imProject.persistence.model.user.User;
 import com.basumatarau.imProject.persistence.model.meta.User_;
 import org.springframework.data.jpa.domain.Specification;
 

@@ -1,6 +1,7 @@
 package com.basumatarau.imProject.persistenceTest;
 
 import com.basumatarau.imProject.persistence.model.*;
+import com.basumatarau.imProject.persistence.model.user.User;
 import com.basumatarau.imProject.persistence.repository.ContactEntryRepository;
 import com.basumatarau.imProject.persistence.repository.MessageResourceRepository;
 import com.basumatarau.imProject.persistence.repository.PrivateMessageRepository;

@@ -1,6 +1,6 @@
 package com.basumatarau.imProject.convertor.cutomConvertors;
 
-import com.basumatarau.imProject.persistence.model.User;
+import com.basumatarau.imProject.persistence.model.user.User;
 import com.basumatarau.imProject.serializer.customDto.UserProfileDto;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;

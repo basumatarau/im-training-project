@@ -1,6 +1,7 @@
 package com.basumatarau.imProject.persistence.repository;
 
 import com.basumatarau.imProject.persistence.model.*;
+import com.basumatarau.imProject.persistence.model.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -8,6 +8,12 @@ module com.basumatarau.imProject.security.webSecurity {
     requires com.basumatarau.imProject.service.userDetailsServiceImpl;
     requires javax.servlet.api;
     requires spring.core;
+    requires org.slf4j;
+    requires spring.security.web;
+    requires spring.security.oauth2.client;
+    requires spring.security.oauth2.core;
+    requires com.basumatarau.imProject.persistence;
+    requires spring.tx;
 
     exports com.basumatarau.imProject.security.webSecurity.config;
 }

@@ -1,7 +1,7 @@
 package com.basumatarau.imProject.persistence.model.meta;
 
 import com.basumatarau.imProject.persistence.model.PersonalContact;
-import com.basumatarau.imProject.persistence.model.User;
+import com.basumatarau.imProject.persistence.model.user.User;
 
 import javax.annotation.Generated;
 import javax.persistence.metamodel.SingularAttribute;

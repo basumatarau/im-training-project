@@ -3,7 +3,7 @@ package com.basumatarau.imProject.service.contactEntryServiceImpl.impl;
 import com.basumatarau.imProject.persistence.model.ContactEntry;
 import com.basumatarau.imProject.persistence.model.PersonalContact;
 import com.basumatarau.imProject.persistence.model.Subscription;
-import com.basumatarau.imProject.persistence.model.User;
+import com.basumatarau.imProject.persistence.model.user.User;
 import com.basumatarau.imProject.persistence.repository.ContactEntryRepository;
 import com.basumatarau.imProject.persistence.repository.UserRepository;
 import com.basumatarau.imProject.serializer.customDto.ContactEntryVo;

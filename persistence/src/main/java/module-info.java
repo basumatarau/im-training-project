@@ -12,9 +12,12 @@ module com.basumatarau.imProject.persistence {
     requires java.desktop;
     requires java.annotation;
     requires java.persistence;
+    requires lombok;
+    requires spring.tx;
 
     exports com.basumatarau.imProject.persistence.repository.util;
     exports com.basumatarau.imProject.persistence.repository;
     exports com.basumatarau.imProject.persistence.model;
+    exports com.basumatarau.imProject.persistence.model.user;
     exports com.basumatarau.imProject.persistence.config;
 }
