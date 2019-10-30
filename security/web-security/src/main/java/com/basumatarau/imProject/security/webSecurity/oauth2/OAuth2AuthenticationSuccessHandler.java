@@ -1,9 +1,8 @@
 package com.basumatarau.imProject.security.webSecurity.oauth2;
 
-
-import by.vironit.training.basumatarau.messenger.exception.BadRequestException;
-import by.vironit.training.basumatarau.messenger.security.JwtTokenProvider;
-import by.vironit.training.basumatarau.messenger.security.util.CookieUtils;
+import com.basumatarau.imProject.security.jwtApiTokenProvider.JwtApiTokenProviderImpl;
+import com.basumatarau.imProject.security.webSecurity.exception.BadRequestException;
+import com.basumatarau.imProject.security.webSecurity.util.CookieUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.core.Authentication;
@@ -21,22 +20,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static by.vironit.training.basumatarau.messenger.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
+import static com.basumatarau.imProject.security.webSecurity.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
+
 
 @Component
 @ConfigurationProperties(prefix = "app.oauth2")
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private JwtTokenProvider tokenProvider;
+    private JwtApiTokenProviderImpl jwtApiTokenProvider;
 
     private List<String> authorizedRedirectUris = new ArrayList<>();
 
     private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @Autowired
-    OAuth2AuthenticationSuccessHandler(JwtTokenProvider tokenProvider,
+    OAuth2AuthenticationSuccessHandler(JwtApiTokenProviderImpl tokenProvider,
                                        HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository) {
-        this.tokenProvider = tokenProvider;
+        this.jwtApiTokenProvider = tokenProvider;
         this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
     }
 
@@ -67,7 +67,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
-        String token = tokenProvider.createToken(authentication);
+        String token = jwtApiTokenProvider.createToken(authentication);
 
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("token", token)

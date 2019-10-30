@@ -1,11 +1,13 @@
 package com.basumatarau.imProject.security.webSecurity.customPrincipal;
 
+import lombok.Builder;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 import java.util.Map;
 
 @CustomPrincipal
+@Builder
 public class CustomUserPrincipal implements CustomUserDetails {
     private Boolean accountNonLocked;
     private Boolean accountNonExpired;

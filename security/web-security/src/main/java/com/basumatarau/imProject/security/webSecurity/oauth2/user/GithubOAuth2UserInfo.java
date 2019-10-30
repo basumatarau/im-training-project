@@ -8,15 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GithubOAuth2UserInfo extends OAuth2UserInfo {
+public class GithubOAuth2UserInfo extends CustomOAuth2User {
 
     private List<GrantedAuthority> authorities =
             AuthorityUtils.createAuthorityList("ROLE_USER");
-
-    private String id;
-    private String name;
-    private String login;
-    private String email;
 
     public GithubOAuth2UserInfo(Map<String, Object> attributes) {
         super(attributes);

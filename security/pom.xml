@@ -16,7 +16,6 @@
 
     <modules>
         <module>web-security</module>
-        <module>jwt-api-token-provider</module>
     </modules>
 
 </project>

@@ -4,11 +4,11 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Map;
 
-public abstract class OAuth2UserInfo implements OAuth2User {
+public abstract class CustomOAuth2User implements OAuth2User {
 
     protected Map<String, Object> attributes;
 
-    public OAuth2UserInfo(Map<String, Object> attributes) {
+    public CustomOAuth2User(Map<String, Object> attributes) {
         this.attributes = attributes;
     }
 

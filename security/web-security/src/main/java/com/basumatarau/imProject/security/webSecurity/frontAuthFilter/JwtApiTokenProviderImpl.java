@@ -1,13 +1,15 @@
-package com.basumatarau.imProject.security.jwtApiTokenProvider;
+package com.basumatarau.imProject.security.webSecurity.frontAuthFilter;
 
+import com.basumatarau.imProject.security.webSecurity.oauth2.user.CustomOAuth2User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
@@ -30,23 +32,30 @@ public class JwtApiTokenProviderImpl {
         Object principal = auth.getPrincipal();
         Date expiryDate = new Date(new Date().getTime() + tokenExpirationPeriod);
 
-        //todo replace the deprecated token signature method
-        return Jwts.builder()
-                //getName method of the customized user principal returns the user id
-                .setSubject(principal.getName())
-                .setIssuedAt(new Date())
-                .setExpiration(expiryDate)
-                .signWith(secureKey)
-                .compact();
+        if(principal instanceof CustomOAuth2User){
+            return Jwts.builder()
+                    .setSubject(((CustomOAuth2User) principal).getEmail())
+                    .setIssuedAt(new Date())
+                    .setExpiration(expiryDate)
+                    .signWith(secureKey)
+                    .compact();
+        }else{
+            return Jwts.builder()
+                    .setSubject(((UserDetails) principal).getUsername())
+                    .setIssuedAt(new Date())
+                    .setExpiration(expiryDate)
+                    .signWith(secureKey)
+                    .compact();
+        }
     }
 
-    public Long getUserIdFromToken(String token){
+    public String getUserEmailFromToken(String token){
         Claims body = Jwts.parser()
                 .setSigningKey(secureKey)
                 .parseClaimsJws(token)
                 .getBody();
 
-        return Long.parseLong(body.getSubject());
+        return body.getSubject();
     }
 
     public boolean validate(String token){

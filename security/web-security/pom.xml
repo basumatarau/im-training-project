@@ -68,6 +68,10 @@
             <artifactId>javax.servlet-api</artifactId>
             <version>${javax.servlet-api}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>

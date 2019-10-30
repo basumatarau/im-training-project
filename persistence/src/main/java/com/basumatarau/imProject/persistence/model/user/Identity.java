@@ -35,6 +35,7 @@ public class Identity {
 
     @Embedded
     @EqualsAndHashCode.Exclude
+    @Setter
     private AuthenticationDetails details;
 
     @Builder

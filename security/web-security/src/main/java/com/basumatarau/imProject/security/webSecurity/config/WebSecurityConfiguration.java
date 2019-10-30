@@ -1,15 +1,12 @@
 package com.basumatarau.imProject.security.webSecurity.config;
 
 import com.basumatarau.imProject.security.webSecurity.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
-import com.basumatarau.imProject.security.webSecurity.oauth2.user.GitHubOAuth2User;
-import com.basumatarau.imProject.security.webSecurity.oauth2.user.GoogleOAuth2User;
 import com.basumatarau.imProject.service.userDetailsServiceImpl.config.UserDetailsServiceImplConfig;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.BeanIds;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -68,8 +65,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .baseUri("/oauth2/callback/")
                 .and()
                 .userInfoEndpoint()
-                .customUserType(GitHubOAuth2User.class, "github")
-                .customUserType(GoogleOAuth2User.class, "google")
 
         ;
 

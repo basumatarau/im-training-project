@@ -14,6 +14,13 @@ module com.basumatarau.imProject.security.webSecurity {
     requires spring.security.oauth2.core;
     requires com.basumatarau.imProject.persistence;
     requires spring.tx;
+    requires java.persistence;
+    requires spring.boot;
+    requires modelmapper;
+
+    requires lombok;
+    requires jjwt.api;
 
     exports com.basumatarau.imProject.security.webSecurity.config;
+    exports com.basumatarau.imProject.security.webSecurity.oauth2.user;
 }
