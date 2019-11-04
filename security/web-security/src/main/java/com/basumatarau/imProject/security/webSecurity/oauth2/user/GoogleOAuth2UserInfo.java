@@ -1,5 +1,6 @@
 package com.basumatarau.imProject.security.webSecurity.oauth2.user;
 
+import com.basumatarau.imProject.persistence.model.user.AuthenticationDetails;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 
@@ -8,13 +9,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GoogleOAuth2UserInfo extends CustomOAuth2User {
+public class GoogleOAuth2UserInfo extends AbstractCustomOAuth2UserImpl {
 
     private List<GrantedAuthority> authorities =
             AuthorityUtils.createAuthorityList("ROLE_USER");
 
-    public GoogleOAuth2UserInfo(Map<String, Object> attributes) {
-        super(attributes);
+    public GoogleOAuth2UserInfo(Map<String, Object> attributes,
+                                AuthenticationProvider provider) {
+        super(attributes, provider);
+    }
+
+    @Override
+    public String gteProvider() {
+        return provider.name();
     }
 
     @Override
@@ -26,7 +33,7 @@ public class GoogleOAuth2UserInfo extends CustomOAuth2User {
     public Map<String, Object> getAttributes() {
         if (this.attributes == null) {
             this.attributes = new HashMap<>();
-            this.attributes.put("sub", this.getId());
+            this.attributes.put("sub", this.getProvidedId());
             this.attributes.put("name", this.getName());
             this.attributes.put("email", this.getEmail());
             this.attributes.put("picture", this.getImageUrl());
@@ -35,7 +42,7 @@ public class GoogleOAuth2UserInfo extends CustomOAuth2User {
     }
 
     @Override
-    public String getId() {
+    public String getProvidedId() {
         return (String) attributes.get("sub");
     }
 

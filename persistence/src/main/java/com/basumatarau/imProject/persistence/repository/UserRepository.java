@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -35,4 +36,13 @@ public interface UserRepository
     @Query("select u from User u where u.isEnabled = true")
     @Override
     Page<User> findAll(Specification<User> spec, Pageable pageable);
+
+    @Query("select u from User u where " +
+            " treat(u as Identity).details.provider=provider " +
+            " and " +
+            " treat(u as Identity).details.providedId=providedId " +
+            " and " +
+            " u.isEnabled=true")
+    Optional<User> findByProviderAndProvidedId(@Param("provider") String provider,
+                                               @Param("providedId") String providedId);
 }

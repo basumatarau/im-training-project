@@ -37,9 +37,9 @@ public abstract class BaseRepositoryTest {
     public void initBase() throws InstantiationException {
 
         AuthenticationDetails localDetails
-                = AuthenticationDetails.builder().authProvider(local).build();
+                = AuthenticationDetails.builder().authProvider("local").build();
 
-        users.add(new User().userBuilder()
+        users.add(User.userBuilder()
                 .isEnabled(true)
                 .details(localDetails)
                 .role(User.UserRole.USER)

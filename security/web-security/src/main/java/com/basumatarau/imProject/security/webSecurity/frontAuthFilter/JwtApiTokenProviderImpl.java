@@ -1,6 +1,7 @@
 package com.basumatarau.imProject.security.webSecurity.frontAuthFilter;
 
-import com.basumatarau.imProject.security.webSecurity.oauth2.user.CustomOAuth2User;
+import com.basumatarau.imProject.security.webSecurity.customPrincipal.AppUserDetails;
+import com.basumatarau.imProject.security.webSecurity.oauth2.user.AbstractCustomOAuth2UserImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
@@ -29,33 +30,24 @@ public class JwtApiTokenProviderImpl {
 
 
     public String createToken(Authentication auth){
-        Object principal = auth.getPrincipal();
+        AppUserDetails principal = ((AppUserDetails) auth.getPrincipal());
         Date expiryDate = new Date(new Date().getTime() + tokenExpirationPeriod);
 
-        if(principal instanceof CustomOAuth2User){
-            return Jwts.builder()
-                    .setSubject(((CustomOAuth2User) principal).getEmail())
-                    .setIssuedAt(new Date())
-                    .setExpiration(expiryDate)
-                    .signWith(secureKey)
-                    .compact();
-        }else{
-            return Jwts.builder()
-                    .setSubject(((UserDetails) principal).getUsername())
-                    .setIssuedAt(new Date())
-                    .setExpiration(expiryDate)
-                    .signWith(secureKey)
-                    .compact();
-        }
+        return Jwts.builder()
+                .setSubject(principal.getAppId().toString())
+                .setIssuedAt(new Date())
+                .setExpiration(expiryDate)
+                .signWith(secureKey)
+                .compact();
     }
 
-    public String getUserEmailFromToken(String token){
+    public Long getAppUserIdFromToken(String token){
         Claims body = Jwts.parser()
                 .setSigningKey(secureKey)
                 .parseClaimsJws(token)
                 .getBody();
 
-        return body.getSubject();
+        return Long.valueOf(body.getSubject());
     }
 
     public boolean validate(String token){

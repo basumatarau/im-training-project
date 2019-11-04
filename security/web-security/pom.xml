@@ -18,6 +18,9 @@
         <javax.servlet-api>4.0.1</javax.servlet-api>
         <spring-security-oauth2.version>2.2.5.RELEASE</spring-security-oauth2.version>
         <spring-security-oauth2-autoconfigure.version>2.1.8.RELEASE</spring-security-oauth2-autoconfigure.version>
+        <io.jsonwebtoken.jjwt-api>0.10.6</io.jsonwebtoken.jjwt-api>
+        <io.jsonwebtoken.jjwt-impl>0.10.6</io.jsonwebtoken.jjwt-impl>
+        <io.jsonwebtoken.jjwt-jackson>0.10.6</io.jsonwebtoken.jjwt-jackson>
     </properties>
 
     <dependencies>
@@ -73,5 +76,26 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>${io.jsonwebtoken.jjwt-api}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-impl -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>${io.jsonwebtoken.jjwt-impl}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>${io.jsonwebtoken.jjwt-jackson}</version>
+            <scope>runtime</scope>
+        </dependency>
+
     </dependencies>
 </project>

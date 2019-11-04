@@ -1,7 +1,7 @@
 package com.basumatarau.imProject.security.webSecurity.frontAuthFilter;
 
-import com.basumatarau.imProject.security.webSecurity.customPrincipal.CustomUserDetails;
-import com.basumatarau.imProject.security.webSecurity.service.CustomUserDetailsService;
+import com.basumatarau.imProject.security.webSecurity.customPrincipal.AppLocalUserDetails;
+import com.basumatarau.imProject.security.webSecurity.service.AppUserDetailsService;
 import com.basumatarau.imProject.security.webSecurity.util.TokenExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
     private JwtApiTokenProviderImpl jwtApiTokenProvider;
 
     @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+    private AppUserDetailsService customUserDetailsService;
 
     private Logger logger = LoggerFactory.getLogger(JwtTokenAuthenticationFilter.class);
 
@@ -48,11 +48,11 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
             String rawToken = tokenExtractor.extract(authHeader);
 
             if(jwtApiTokenProvider.validate(rawToken)){
-                String email = jwtApiTokenProvider.getUserEmailFromToken(rawToken);
+                Long appId = jwtApiTokenProvider.getAppUserIdFromToken(rawToken);
 
-                CustomUserDetails customUserDetails = customUserDetailsService
-                        .loadUserByEmail(email)
-                        .orElseThrow(() -> new EntityNotFoundException("no user found by email: " + email));
+                AppLocalUserDetails customUserDetails = customUserDetailsService
+                        .loadUserById(appId)
+                        .orElseThrow(() -> new EntityNotFoundException("no user found by id: " + appId));
 
                 UsernamePasswordAuthenticationToken auth =
                         new UsernamePasswordAuthenticationToken(

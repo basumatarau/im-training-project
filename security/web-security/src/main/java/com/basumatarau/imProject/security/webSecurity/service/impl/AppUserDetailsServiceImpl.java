@@ -2,10 +2,9 @@ package com.basumatarau.imProject.security.webSecurity.service.impl;
 
 import com.basumatarau.imProject.persistence.model.user.User;
 import com.basumatarau.imProject.persistence.repository.UserRepository;
-import com.basumatarau.imProject.security.webSecurity.customPrincipal.CustomUserDetails;
+import com.basumatarau.imProject.security.webSecurity.customPrincipal.AppLocalUserDetails;
 import com.basumatarau.imProject.security.webSecurity.customPrincipal.CustomUserPrincipal;
-import com.basumatarau.imProject.security.webSecurity.service.CustomUserDetailsService;
-import org.modelmapper.ModelMapper;
+import com.basumatarau.imProject.security.webSecurity.service.AppUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +17,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 @Service
-public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
+public class AppUserDetailsServiceImpl implements AppUserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
@@ -35,13 +34,13 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<CustomUserDetails> loadUserByEmail(String email) throws EntityNotFoundException {
+    public Optional<AppLocalUserDetails> loadUserById(Long id) throws EntityNotFoundException {
         return userRepository
-                .findByEmail(email)
+                .findById(id)
                 .map(this::convertToCustomUserDetails);
     }
 
-    private CustomUserDetails convertToCustomUserDetails(User user){
+    private AppLocalUserDetails convertToCustomUserDetails(User user){
         return CustomUserPrincipal.builder()
                 .accountConfirmed(true)
                 .accountNonExpired(true)
@@ -49,10 +48,11 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
                 .enabled(user.getIsEnabled())
                 .authorities(Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name())))
                 .credentialsNonExpired(true)
+                //
                 .id(user.getId())
                 .email(user.getEmail())
                 .passwordHash(user.getPasswordHash())
-                .registrationId(user.getDetails().getAuthProvider().name())
+                .registrationId(user.getDetails().getProvider())
                 .userName(user.getNickName())
                 .build();
     }

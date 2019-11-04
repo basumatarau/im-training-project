@@ -20,6 +20,7 @@ module com.basumatarau.imProject.security.webSecurity {
 
     requires lombok;
     requires jjwt.api;
+    requires jjwt;
 
     exports com.basumatarau.imProject.security.webSecurity.config;
     exports com.basumatarau.imProject.security.webSecurity.oauth2.user;

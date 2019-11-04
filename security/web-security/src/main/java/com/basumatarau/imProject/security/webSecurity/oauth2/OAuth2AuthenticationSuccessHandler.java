@@ -1,7 +1,7 @@
 package com.basumatarau.imProject.security.webSecurity.oauth2;
 
-import com.basumatarau.imProject.security.jwtApiTokenProvider.JwtApiTokenProviderImpl;
 import com.basumatarau.imProject.security.webSecurity.exception.BadRequestException;
+import com.basumatarau.imProject.security.webSecurity.frontAuthFilter.JwtApiTokenProviderImpl;
 import com.basumatarau.imProject.security.webSecurity.util.CookieUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;

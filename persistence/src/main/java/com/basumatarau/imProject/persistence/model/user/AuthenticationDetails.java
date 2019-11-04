@@ -9,9 +9,8 @@ import java.util.Map;
 @Data
 @Embeddable
 public class AuthenticationDetails {
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private AuthenticationProvider authProvider;
+
+    private String provider;
 
     private String providedId;
 
@@ -22,22 +21,16 @@ public class AuthenticationDetails {
     @EqualsAndHashCode.Exclude
     private Map<String, Object> attributes;
 
-    public enum AuthenticationProvider{
-        google,
-        github,
-        local
-    }
-
     @Builder
-    public AuthenticationDetails(AuthenticationProvider authProvider, String providedId, String imageUrl) {
-        this.authProvider = authProvider;
+    public AuthenticationDetails(String authProvider, String providedId, String imageUrl) {
+        this.provider = authProvider;
         this.providedId = providedId;
         this.imageUrl = imageUrl;
     }
 
     @Builder(builderMethodName = "transientBuilder")
-    public AuthenticationDetails(AuthenticationProvider authProvider, String providedId, String imageUrl, Map<String, Object> attributes) {
-        this.authProvider = authProvider;
+    public AuthenticationDetails(String authProvider, String providedId, String imageUrl, Map<String, Object> attributes) {
+        this.provider = authProvider;
         this.providedId = providedId;
         this.imageUrl = imageUrl;
         this.attributes = attributes;

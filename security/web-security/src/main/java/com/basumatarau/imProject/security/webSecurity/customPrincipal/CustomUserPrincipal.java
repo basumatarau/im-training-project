@@ -8,7 +8,7 @@ import java.util.Map;
 
 @CustomPrincipal
 @Builder
-public class CustomUserPrincipal implements CustomUserDetails {
+public class CustomUserPrincipal implements AppLocalUserDetails {
     private Boolean accountNonLocked;
     private Boolean accountNonExpired;
     private Boolean credentialsNonExpired;
@@ -26,8 +26,13 @@ public class CustomUserPrincipal implements CustomUserDetails {
     private Map<String, Object> attributes;
 
     @Override
-    public String getEmail() {
-        return email;
+    public String getProvidedId() {
+        return String.valueOf(id);
+    }
+
+    @Override
+    public String gteProvider() {
+        return this.registrationId;
     }
 
     @Override

@@ -1,10 +1,10 @@
-package com.basumatarau.imProject.security.webSecurity.oauth2;
+package com.basumatarau.imProject.security.webSecurity.service.impl;
 
 import com.basumatarau.imProject.persistence.model.user.AuthenticationDetails;
 import com.basumatarau.imProject.persistence.model.user.User;
 import com.basumatarau.imProject.persistence.repository.UserRepository;
 import com.basumatarau.imProject.security.webSecurity.exception.Oauth2AuthenticationProcessingException;
-import com.basumatarau.imProject.security.webSecurity.oauth2.user.CustomOAuth2User;
+import com.basumatarau.imProject.security.webSecurity.oauth2.user.AbstractCustomOAuth2UserImpl;
 import com.basumatarau.imProject.security.webSecurity.oauth2.user.OAuth2UserInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -21,7 +21,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Service
-public class CustomOAuth2UserService extends DefaultOAuth2UserService {
+public class CustomOAuth2UserServiceImpl extends DefaultOAuth2UserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -44,39 +44,39 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private OAuth2User processOAuth2User(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) {
         String registrationId = oAuth2UserRequest.getClientRegistration().getRegistrationId();
 
-        CustomOAuth2User oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(
+        AbstractCustomOAuth2UserImpl customOAuth2User = OAuth2UserInfoFactory.getOAuth2UserInfo(
                 registrationId, oAuth2User.getAttributes()
         );
 
-        if(StringUtils.isEmpty(oAuth2UserInfo.getEmail())) {
+        if(StringUtils.isEmpty(customOAuth2User.getEmail())) {
             throw new Oauth2AuthenticationProcessingException("Authentication authority doesn't have the user email, " +
                     "auth id: " + registrationId);
         }
-        AuthenticationDetails.AuthenticationProvider authProviderIdFromRequest =
-                AuthenticationDetails.AuthenticationProvider
+        AbstractCustomOAuth2UserImpl.AuthenticationProvider authProviderIdFromRequest =
+                AbstractCustomOAuth2UserImpl.AuthenticationProvider
                     .valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId());
 
         //map for side effect (register new acc) and return details, orElse: update account
         User freshUser = userRepository
-                .findByEmail(oAuth2UserInfo.getEmail())
+                .findByProviderAndProvidedId(customOAuth2User.gteProvider(), customOAuth2User.getProvidedId())
                 .map(
-                        refreshUser(oAuth2UserInfo, authProviderIdFromRequest)
+                        refreshUser(customOAuth2User, authProviderIdFromRequest)
                 ).orElseGet(
-                        createFreshUser(oAuth2UserInfo, authProviderIdFromRequest)
+                        createFreshUser(customOAuth2User, authProviderIdFromRequest)
                 );
 
-        return oAuth2UserInfo;
+        return customOAuth2User;
     }
 
-    private Supplier<User> createFreshUser(CustomOAuth2User oAuth2UserInfo,
-                                           AuthenticationDetails.AuthenticationProvider authProviderIdFromRequest) {
+    private Supplier<User> createFreshUser(AbstractCustomOAuth2UserImpl oAuth2UserInfo,
+                                           AbstractCustomOAuth2UserImpl.AuthenticationProvider authProviderIdFromRequest) {
         return () -> {
 
             AuthenticationDetails details = AuthenticationDetails
                     .builder()
-                    .authProvider(authProviderIdFromRequest)
+                    .authProvider(authProviderIdFromRequest.name())
                     .imageUrl(oAuth2UserInfo.getImageUrl())
-                    .providedId(oAuth2UserInfo.getId())
+                    .providedId(oAuth2UserInfo.getProvidedId())
                     .build();
 
             User newUser = User.userBuilder()
@@ -91,13 +91,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         };
     }
 
-    private Function<User, User> refreshUser(CustomOAuth2User oAuth2UserInfo,
-                                             AuthenticationDetails.AuthenticationProvider authProviderIdFromRequest) {
+    private Function<User, User> refreshUser(AbstractCustomOAuth2UserImpl oAuth2UserInfo,
+                                             AbstractCustomOAuth2UserImpl.AuthenticationProvider authProviderIdFromRequest) {
         return retrievedUser -> {
-            if (!retrievedUser.getDetails().getAuthProvider().name().equals(authProviderIdFromRequest.toString())) {
+            if (!retrievedUser.getDetails().getProvider().equals(authProviderIdFromRequest.name())) {
                 throw new Oauth2AuthenticationProcessingException("Looks like you're signed up with " +
                         authProviderIdFromRequest.toString() + " account. Please use your " +
-                        retrievedUser.getDetails().getAuthProvider() + " to sign in.");
+                        retrievedUser.getDetails().getProvider() + " account to sign in.");
             }
 
             retrievedUser.setNickName(oAuth2UserInfo.getName());
