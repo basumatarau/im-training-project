@@ -18,7 +18,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.basumatarau.imProject.persistence.model.user.AuthenticationDetails.AuthenticationProvider.local;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("dao-test")

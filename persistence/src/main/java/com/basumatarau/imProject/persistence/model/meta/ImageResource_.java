@@ -12,11 +12,9 @@ public abstract class ImageResource_ extends MessageResource_ {
 
 	public static volatile SingularAttribute<ImageResource, Integer> width;
 	public static volatile SingularAttribute<ImageResource, Integer> height;
-	public static volatile SingularAttribute<ImageResource, byte[]> imageBin;
 
 	public static final String WIDTH = "width";
 	public static final String HEIGHT = "height";
-	public static final String IMAGE_BIN = "imageBin";
 
 }
 
