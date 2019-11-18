@@ -16,26 +16,27 @@
 
     <properties>
         <maven-help-plugin.version>3.2.0</maven-help-plugin.version>
-        <skipTest>true</skipTest>
+        <hibernate.version>5.4.9.Final</hibernate.version>
+        <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
+        <maven-processor-plugin.version>3.3.3</maven-processor-plugin.version>
+        <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
+        <maven-antrun-plugin.veresion>1.8</maven-antrun-plugin.veresion>
+        <lombok.version>1.18.10</lombok.version>
     </properties>
 
     <profiles>
-        <!-- default profile -->
+        <!-- local profile for local deployment -->
         <profile>
-            <id>env-local-init</id>
+            <id>env-local</id>
             <activation>
-                <file>
-                    <missing>target/nothing-meta.tmp</missing>
-                </file>
+                <property>
+                    <name>env</name>
+                    <value>local</value>
+                </property>
             </activation>
 
             <properties>
-                <hibernate.version>5.4.9.Final</hibernate.version>
-                <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
-                <maven-processor-plugin.version>3.3.3</maven-processor-plugin.version>
-                <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
-                <maven-antrun-plugin.veresion>1.8</maven-antrun-plugin.veresion>
-                <lombok.version>1.18.10</lombok.version>
+                <skipTest>false</skipTest>
             </properties>
 
             <build>
@@ -46,7 +47,7 @@
                         <version>${maven-antrun-plugin.veresion}</version>
                         <executions>
                             <execution>
-                                <phase>generate-resources</phase>
+                                <phase>test</phase>
                                 <goals>
                                     <goal>run</goal>
                                 </goals>
@@ -59,47 +60,11 @@
                         </executions>
                     </plugin>
 
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>${maven-surefire-plugin.version}</version>
-                        <configuration>
-                            <skipTests>${skipTest}</skipTests>
-                        </configuration>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <version>${javac.compiler.version}</version>
-                        <configuration>
-                            <compilerArgs>
-                                <arg>-verbose</arg>
-                                <arg>-Xlint:all,-options,-path</arg>
-                            </compilerArgs>
-                            <annotationProcessorPaths>
-                                <path>
-                                    <groupId>org.projectlombok</groupId>
-                                    <artifactId>lombok</artifactId>
-                                    <version>${lombok.version}</version>
-                                </path>
-                                <path>
-                                    <groupId>org.hibernate</groupId>
-                                    <artifactId>hibernate-jpamodelgen</artifactId>
-                                    <version>${hibernate.version}</version>
-                                </path>
-                                <path>
-                                    <groupId>org.codehaus.mojo</groupId>
-                                    <artifactId>build-helper-maven-plugin</artifactId>
-                                    <version>${build-helper-maven-plugin.version}</version>
-                                </path>
-                            </annotationProcessorPaths>
-                        </configuration>
-                    </plugin>
                 </plugins>
             </build>
         </profile>
-        <!-- custom profiles -->
+
+        <!-- profile for dev env deployment (unit tests + smoke tests + maybe component tests) -->
         <profile>
             <id>env-dev</id>
             <activation>
@@ -108,7 +73,14 @@
                     <value>dev</value>
                 </property>
             </activation>
+
+            <properties>
+                <skipTest>false</skipTest>
+            </properties>
+
         </profile>
+
+        <!-- profile for dev env deployment (integration and system tests) -->
         <profile>
             <id>env-test</id>
             <activation>
@@ -117,7 +89,13 @@
                     <value>test</value>
                 </property>
             </activation>
+
+            <properties>
+                <skipTest>true</skipTest>
+            </properties>
         </profile>
+
+        <!-- THE production -->
         <profile>
             <id>env-prod</id>
             <activation>
@@ -126,6 +104,10 @@
                     <value>prod</value>
                 </property>
             </activation>
+
+            <properties>
+                <skipTest>true</skipTest>
+            </properties>
         </profile>
     </profiles>
 
@@ -134,7 +116,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-        <!-- database driver -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -166,7 +147,33 @@
     </dependencies>
 
     <build>
+        <!-- Loading all ${} -->
+        <filters>
+            <filter>src/main/resources/env/config.${env}.properties</filter>
+        </filters>
+
+        <!-- Map ${} into resources -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>*.properties</include>
+                </includes>
+            </resource>
+        </resources>
+
         <plugins>
+            <!-- skip tests (not recommended to test against prod) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <skipTests>${skipTest}</skipTests>
+                </configuration>
+            </plugin>
+
             <!-- display active profiles in compile phase -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -181,6 +188,36 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <!-- delombok + metamodel generation + src import -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${javac.compiler.version}</version>
+                <configuration>
+                    <compilerArgs>
+                        <arg>-verbose</arg>
+                        <arg>-Xlint:all,-options,-path</arg>
+                    </compilerArgs>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.hibernate</groupId>
+                            <artifactId>hibernate-jpamodelgen</artifactId>
+                            <version>${hibernate.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>build-helper-maven-plugin</artifactId>
+                            <version>${build-helper-maven-plugin.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
             </plugin>
         </plugins>
     </build>
