@@ -15,8 +15,119 @@
     </parent>
 
     <properties>
-        <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
+        <maven-help-plugin.version>3.2.0</maven-help-plugin.version>
+        <skipTest>true</skipTest>
     </properties>
+
+    <profiles>
+        <!-- default profile -->
+        <profile>
+            <id>env-local-init</id>
+            <activation>
+                <file>
+                    <missing>target/nothing-meta.tmp</missing>
+                </file>
+            </activation>
+
+            <properties>
+                <hibernate.version>5.4.9.Final</hibernate.version>
+                <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
+                <maven-processor-plugin.version>3.3.3</maven-processor-plugin.version>
+                <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
+                <maven-antrun-plugin.veresion>1.8</maven-antrun-plugin.veresion>
+                <lombok.version>1.18.10</lombok.version>
+            </properties>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>${maven-antrun-plugin.veresion}</version>
+                        <executions>
+                            <execution>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <touch file="target/nothing-meta.tmp" />
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven-surefire-plugin.version}</version>
+                        <configuration>
+                            <skipTests>${skipTest}</skipTests>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>${javac.compiler.version}</version>
+                        <configuration>
+                            <compilerArgs>
+                                <arg>-verbose</arg>
+                                <arg>-Xlint:all,-options,-path</arg>
+                            </compilerArgs>
+                            <annotationProcessorPaths>
+                                <path>
+                                    <groupId>org.projectlombok</groupId>
+                                    <artifactId>lombok</artifactId>
+                                    <version>${lombok.version}</version>
+                                </path>
+                                <path>
+                                    <groupId>org.hibernate</groupId>
+                                    <artifactId>hibernate-jpamodelgen</artifactId>
+                                    <version>${hibernate.version}</version>
+                                </path>
+                                <path>
+                                    <groupId>org.codehaus.mojo</groupId>
+                                    <artifactId>build-helper-maven-plugin</artifactId>
+                                    <version>${build-helper-maven-plugin.version}</version>
+                                </path>
+                            </annotationProcessorPaths>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- custom profiles -->
+        <profile>
+            <id>env-dev</id>
+            <activation>
+                <property>
+                    <name>env</name>
+                    <value>dev</value>
+                </property>
+            </activation>
+        </profile>
+        <profile>
+            <id>env-test</id>
+            <activation>
+                <property>
+                    <name>env</name>
+                    <value>test</value>
+                </property>
+            </activation>
+        </profile>
+        <profile>
+            <id>env-prod</id>
+            <activation>
+                <property>
+                    <name>env</name>
+                    <value>prod</value>
+                </property>
+            </activation>
+        </profile>
+    </profiles>
 
     <dependencies>
         <dependency>
@@ -50,59 +161,26 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-jpamodelgen</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.1.2</version>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>build-helper-maven-plugin</artifactId>
-                    <executions>
-                        <execution>
-                            <id>add-source</id>
-                            <phase>generate-sources</phase>
-                            <goals>
-                                <goal>add-source</goal>
-                            </goals>
-                            <configuration>
-                                <sources>
-                                    <source>target/generated-sources/annotations</source>
-                                </sources>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-
         <plugins>
-
+            <!-- display active profiles in compile phase -->
             <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${javac.compiler.version}</version>
-                <configuration>
-                    <source>9</source>
-                    <target>9</target>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>1.18.8</version>
-                        </path>
-                        <path>
-                            <groupId>org.codehaus.mojo</groupId>
-                            <artifactId>build-helper-maven-plugin</artifactId>
-                            <version>${build-helper-maven-plugin.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
-                </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-help-plugin</artifactId>
+                <version>${maven-help-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>show-profiles</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>active-profiles</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
