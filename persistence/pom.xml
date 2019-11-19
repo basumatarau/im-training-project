@@ -29,7 +29,7 @@
         <profile>
             <id>env-local</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <activeByDefault>false</activeByDefault>
                 <property>
                     <name>env</name>
                     <value>local</value>
