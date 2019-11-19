@@ -1,9 +1,12 @@
 spring:
+  profiles:
+    active:
+      @spring.profiles.active@
   datasource:
-    url: jdbc:postgresql://localhost:5432/im-db-training-project
-    username: postgres
-    password: root
-    driver-class-name: org.postgresql.Driver
+    url: @datasource.url@
+    username: @datasource.username@
+    password: @datasource.password@
+    driver-class-name: @datasource.driver-class-name@
     testWhileIdle: true
     validationQuery: SELECT 1
     hikari:
@@ -25,5 +28,5 @@ spring:
             non_contextual_creation: true
         format_sql: true
         ddl-auto: validate
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: @jpa.properties.hibernate.dialect@
     show-sql: true

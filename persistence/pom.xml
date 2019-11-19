@@ -29,6 +29,7 @@
         <profile>
             <id>env-local</id>
             <activation>
+                <activeByDefault>true</activeByDefault>
                 <property>
                     <name>env</name>
                     <value>local</value>
@@ -37,31 +38,8 @@
 
             <properties>
                 <skipTest>false</skipTest>
+                <env>local</env>
             </properties>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <version>${maven-antrun-plugin.veresion}</version>
-                        <executions>
-                            <execution>
-                                <phase>test</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target>
-                                        <touch file="target/nothing-meta.tmp" />
-                                    </target>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                </plugins>
-            </build>
         </profile>
 
         <!-- profile for dev env deployment (unit tests + smoke tests + maybe component tests) -->
@@ -75,6 +53,7 @@
             </activation>
 
             <properties>
+                <env>dev</env>
                 <skipTest>false</skipTest>
             </properties>
 
@@ -91,6 +70,7 @@
             </activation>
 
             <properties>
+                <env>test</env>
                 <skipTest>true</skipTest>
             </properties>
         </profile>
@@ -106,6 +86,7 @@
             </activation>
 
             <properties>
+                <env>prod</env>
                 <skipTest>true</skipTest>
             </properties>
         </profile>
@@ -147,18 +128,19 @@
     </dependencies>
 
     <build>
-        <!-- Loading all ${} -->
+        <!-- loading all ${} -->
         <filters>
             <filter>src/main/resources/env/config.${env}.properties</filter>
         </filters>
 
-        <!-- Map ${} into resources -->
+        <!-- map ${} to application.yml -->
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
                 <includes>
-                    <include>*.properties</include>
+                    <!-- <include>*.properties</include> -->
+                    <include>*.yml</include>
                 </includes>
             </resource>
         </resources>
@@ -171,6 +153,10 @@
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
                     <skipTests>${skipTest}</skipTests>
+
+                    <forkCount>0</forkCount> <!-- changed this to 0 -->
+                    <reuseForks>false</reuseForks>
+                    <!--<printSummary>true</printSummary>-->
                 </configuration>
             </plugin>
 
@@ -190,7 +176,7 @@
                 </executions>
             </plugin>
 
-            <!-- delombok + metamodel generation + src import -->
+            <!-- delombok + metamodel generation + src import + ...and then compile -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
