@@ -88,8 +88,8 @@ public abstract class Message {
 
         /**see also {@link #body(String)} */
         @SuppressWarnings("unchecked")
-        public B messageResources(Set<MessageResource> resources){
-            this.resources = resources;
+        public B messageResources(Set<? extends MessageResource> resources){
+            this.resources.addAll(resources);
             return ((B) this);
         }
 

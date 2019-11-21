@@ -19,7 +19,7 @@
         <hibernate.version>5.4.9.Final</hibernate.version>
         <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
         <maven-processor-plugin.version>3.3.3</maven-processor-plugin.version>
-        <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
         <maven-antrun-plugin.veresion>1.8</maven-antrun-plugin.veresion>
         <lombok.version>1.18.10</lombok.version>
     </properties>
@@ -154,9 +154,11 @@
                 <configuration>
                     <skipTests>${skipTest}</skipTests>
 
-                    <forkCount>0</forkCount> <!-- changed this to 0 -->
+                    <forkCount>0</forkCount>
                     <reuseForks>false</reuseForks>
-                    <!--<printSummary>true</printSummary>-->
+
+                    <!--<forkCount>1C</forkCount> &lt;!&ndash; 'C' - postfix is multiplicand for number of cpu cores  &ndash;&gt;-->
+                    <printSummary>true</printSummary>
                 </configuration>
             </plugin>
 

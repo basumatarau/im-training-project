@@ -68,12 +68,13 @@ public class MessageResourceRepositoryTest extends BaseRepositoryTest{
     public void whenImagePersisted_thenImageCanBeRetrieved()
             throws IOException, InstantiationException, URISyntaxException {
 
-        final URI uri
-                = getClass()
-                .getResource("/test-image.jpg")
-                .toURI();
 
-        final File imageFile = new File(uri);
+        final File imageFile =
+                new File(
+                        getClass()
+                                .getResource("/test-image.jpg")
+                                .getFile()
+                );
         final BufferedImage image = ImageIO.read(imageFile);
 
         final ImageInputStream imageInputStream = ImageIO.createImageInputStream(imageFile);
