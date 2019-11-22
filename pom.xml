@@ -11,6 +11,7 @@
 
     <modules>
         <module>service</module>
+        <module>consumer-test</module>
         <module>persistence</module>
         <module>converter</module>
         <module>serializer</module>
@@ -20,9 +21,9 @@
     </modules>
 
     <properties>
-        <java.version>9</java.version>
-        <maven.compiler.source>9</maven.compiler.source>
-        <maven.compiler.target>9</maven.compiler.target>
+        <java.version>12</java.version>
+        <maven.compiler.source>12</maven.compiler.source>
+        <maven.compiler.target>12</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.boot.version>2.1.6.RELEASE</spring.boot.version>
         <org.modelmapper.modelmapper>2.3.5</org.modelmapper.modelmapper>
@@ -46,6 +47,74 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <profiles>
+        <!-- local profile for local deployment -->
+        <profile>
+            <id>env-local</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <property>
+                    <name>env</name>
+                    <value>local</value>
+                </property>
+            </activation>
+
+            <properties>
+                <skipTest>true</skipTest>
+                <env>local</env>
+            </properties>
+        </profile>
+
+        <!-- profile for dev env deployment (unit tests + smoke tests + maybe component tests) -->
+        <profile>
+            <id>env-dev</id>
+            <activation>
+                <property>
+                    <name>env</name>
+                    <value>dev</value>
+                </property>
+            </activation>
+
+            <properties>
+                <env>dev</env>
+                <skipTest>false</skipTest>
+            </properties>
+
+        </profile>
+
+        <!-- profile for dev env deployment (integration and system tests) -->
+        <profile>
+            <id>env-test</id>
+            <activation>
+                <property>
+                    <name>env</name>
+                    <value>test</value>
+                </property>
+            </activation>
+
+            <properties>
+                <env>test</env>
+                <skipTest>true</skipTest>
+            </properties>
+        </profile>
+
+        <!-- THE production -->
+        <profile>
+            <id>env-prod</id>
+            <activation>
+                <property>
+                    <name>env</name>
+                    <value>prod</value>
+                </property>
+            </activation>
+
+            <properties>
+                <env>prod</env>
+                <skipTest>true</skipTest>
+            </properties>
+        </profile>
+    </profiles>
 
     <build>
         <pluginManagement>
