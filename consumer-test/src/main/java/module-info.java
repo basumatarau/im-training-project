@@ -10,6 +10,6 @@ module com.basumatarau.imProject.consumer {
     requires java.annotation;
 
     requires com.basumatarau.imProject.persistence.starter;
-    requires com.basumatarau.imProject.persistence.autoConfig;
+    requires com.basumatarau.imProject.persistence.autoconfigure;
     requires com.basumatarau.imProject.persistence.lib;
 }

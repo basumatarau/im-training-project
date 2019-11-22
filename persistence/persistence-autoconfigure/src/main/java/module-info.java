@@ -1,4 +1,4 @@
-module com.basumatarau.imProject.persistence.autoConfig {
+module com.basumatarau.imProject.persistence.autoconfigure {
 
     requires spring.boot.autoconfigure;
     requires spring.beans;

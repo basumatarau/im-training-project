@@ -10,5 +10,5 @@ module com.basumatarau.imProject.persistence.starter {
     requires java.annotation;
 
     requires com.basumatarau.imProject.persistence.lib;
-    requires com.basumatarau.imProject.persistence.autoConfig;
+    requires com.basumatarau.imProject.persistence.autoconfigure;
 }

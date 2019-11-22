@@ -21,6 +21,8 @@ public class InstantMessengerPersistenceProperties {
     @NestedConfigurationProperty
     private ApplicationTransactionManagerProperties txManager = new ApplicationTransactionManagerProperties();
 
+    @Getter
+    @Setter
     public static class ApplicationDataSourceProperties {
         public String url = "jdbc:h2:mem:testDB;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;DATABASE_TO_UPPER=FALSE;INIT=CREATE SCHEMA IF NOT EXISTS instant_messenger_db_schema;";
         public String username = "sa";
@@ -50,6 +52,7 @@ public class InstantMessengerPersistenceProperties {
         public Boolean showSql = Boolean.TRUE;
         public Boolean formatSql = Boolean.TRUE;
     }
+
     @Getter
     @Setter
     public static class ApplicationTransactionManagerProperties {

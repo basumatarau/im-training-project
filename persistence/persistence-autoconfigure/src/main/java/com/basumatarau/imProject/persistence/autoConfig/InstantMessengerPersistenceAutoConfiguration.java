@@ -1,9 +1,8 @@
 package com.basumatarau.imProject.persistence.autoConfig;
 
-import com.basumatarau.imProject.persistence.lib.model.user.User;
+import com.basumatarau.imProject.persistence.lib.repository.*;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,20 +19,18 @@ import java.util.Objects;
 import java.util.Properties;
 
 @Configuration
-@ConditionalOnClass(value = {User.class})
-//@ConditionalOnMissingBean(
-//        ignored = {
-//                UserRepository.class,
-//                ChatRoomRepository.class,
-//                DistributedMessageRepository.class,
-//                MessageResourceRepository.class,
-//                PrivateMessageRepository.class,
-//                UserRepository.class
-//        })
+@ConditionalOnMissingBean(
+        value = {
+                UserRepository.class,
+                ChatRoomRepository.class,
+                DistributedMessageRepository.class,
+                MessageResourceRepository.class,
+                PrivateMessageRepository.class,
+                UserRepository.class
+        })
 @EnableConfigurationProperties(InstantMessengerPersistenceProperties.class)
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "com.basumatarau.imProject.persistence.lib.repository")
-//@EntityScan(basePackages = "com.basumatarau.imProject.persistence.lib.model")
 @AutoConfigurationPackage
 public class InstantMessengerPersistenceAutoConfiguration {
 
@@ -67,7 +64,7 @@ public class InstantMessengerPersistenceAutoConfiguration {
     }
 
     @Bean
-    JpaTransactionManager transactionManager(final EntityManagerFactory entityManagerFactory) {
+    public JpaTransactionManager transactionManager(final EntityManagerFactory entityManagerFactory) {
         final JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory);
         return transactionManager;
